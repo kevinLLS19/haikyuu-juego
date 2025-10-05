@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Haikyuu! Desafío Cuadrático 🏐</title>
+  <style>
+    body {
+      background: linear-gradient(to bottom, #ff8c00, #ffb347);
+      color: white;
+      font-family: 'Poppins', sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+    }
+
+    h1 {
+      margin-top: 20px;
+      font-size: 2.5em;
+      text-shadow: 2px 2px 8px #000;
+    }
+
+    #hinata {
+      width: 220px;
+      margin-top: 10px;
+      border-radius: 15px;
+      box-shadow: 0px 0px 20px rgba(255, 255, 255, 0.3);
+    }
+
+    #game-container {
+      background-color: rgba(0, 0, 0, 0.4);
+      border-radius: 20px;
+      width: 80%;
+      max-width: 500px;
+      margin: 40px auto;
+      padding: 30px;
+      box-shadow: 0px 0px 25px rgba(0, 0, 0, 0.5);
+      position: relative;
+    }
+
+    button {
+      background-color: #ff4500;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 1.1em;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background-color: #ff6347;
+      transform: scale(1.05);
+    }
+
+    input {
+      width: 80px;
+      padding: 5px;
+      border-radius: 5px;
+      border: none;
+      text-align: center;
+      font-size: 1em;
+    }
+
+    #resultado {
+      margin-top: 15px;
+      font-size: 1.2em;
+      transition: 0.3s;
+    }
+
+    #gif-celebracion {
+      display: none;
+      margin-top: 15px;
+      width: 200px;
+      border-radius: 15px;
+      box-shadow: 0px 0px 15px rgba(255,255,255,0.4);
+      animation: aparecer 1s ease-in-out;
+    }
+
+    @keyframes aparecer {
+      from { opacity: 0; transform: scale(0.8); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    #musica {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🏐 Haikyuu! Desafío Cuadrático 🧮</h1>
+  <img id="hinata" src="hinata.png" alt="Hinata Shoyo">
+
+  <div id="game-container">
+    <p id="ecuacion">Presiona "Nueva ecuación" para comenzar.</p>
+
+    <input type="number" id="respuesta1" placeholder="x₁">
+    <input type="number" id="respuesta2" placeholder="x₂">
+    <br><br>
+    <button onclick="verificar()">Verificar</button>
+    <button onclick="nuevaEcuacion()">Nueva ecuación</button>
+
+    <p id="resultado"></p>
+    <img id="gif-celebracion" src="celebracion.gif" alt="Hinata celebrando">
+  </div>
+
+  <!-- 🎵 Audio de fondo -->
+  <audio id="musica" autoplay loop>
+    <source src="audio-wsp.mp3" type="audio/mpeg">
+    Tu navegador no soporta audio.
+  </audio>
+
+  <script>
+    let a, b, c, x1, x2;
+
+    function nuevaEcuacion() {
+      a = Math.floor(Math.random() * 5) + 1;
+      b = Math.floor(Math.random() * 10) - 5;
+      c = Math.floor(Math.random() * 10) - 5;
+
+      const discriminante = b * b - 4 * a * c;
+      if (discriminante < 0) {
+        nuevaEcuacion();
+        return;
+      }
+
+      x1 = (-b + Math.sqrt(discriminante)) / (2 * a);
+      x2 = (-b - Math.sqrt(discriminante)) / (2 * a);
+
+      document.getElementById("ecuacion").textContent =
+        `Resuelve: ${a}x² + ${b}x + ${c} = 0`;
+
+      document.getElementById("resultado").textContent = "";
+      document.getElementById("respuesta1").value = "";
+      document.getElementById("respuesta2").value = "";
+      document.getElementById("gif-celebracion").style.display = "none";
+    }
+
+    function verificar() {
+      const r1 = parseFloat(document.getElementById("respuesta1").value);
+      const r2 = parseFloat(document.getElementById("respuesta2").value);
+
+      const correcto1 = parseFloat(x1.toFixed(2));
+      const correcto2 = parseFloat(x2.toFixed(2));
+
+      const ok = (
+        (Math.abs(r1 - correcto1) < 0.1 && Math.abs(r2 - correcto2) < 0.1) ||
+        (Math.abs(r1 - correcto2) < 0.1 && Math.abs(r2 - correcto1) < 0.1)
+      );
+
+      const resultado = document.getElementById("resultado");
+      const gif = document.getElementById("gif-celebracion");
+
+      if (ok) {
+        resultado.textContent = "🔥 ¡Punto para Karasuno! ¡Hinata acertó!";
+        resultado.style.color = "#00ff88";
+        gif.style.display = "block"; // mostrar GIF de celebración
+      } else {
+        resultado.textContent = `😅 Fallaste. Las respuestas eran x₁=${correcto1}, x₂=${correcto2}`;
+        resultado.style.color = "#ff4444";
+        gif.style.display = "none";
+      }
+    }
+  </script>
+</body>
+</html>
